@@ -1,6 +1,6 @@
-import errno
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+import numpy as np
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -14,7 +14,7 @@ def home(request):
 
 new_df = pd.read_csv(
     "C:\\Users\\poona\\yourbooks\\mainapp\\cleaned_goodreads_data.csv", low_memory=False)
-
+new_df = new_df.dropna()
 
 @login_required(login_url='../accounts/login')
 def searchbooks(request, new_df=new_df):
@@ -26,12 +26,15 @@ def searchbooks(request, new_df=new_df):
     # Function for recommending books based on Book title. It takes book title as input
 
     def recommend(title):    
-        global rec
         title = title.lower()
         title = re.sub(r'[^\w\s]', '', title)
-        # Getting genre of that title
-        genre = new_df.loc[new_df['lower_title'] == title]['genre']
-        genre = genre.iloc[0]
+
+        r = new_df[new_df['lower_title'].str.contains(title)]
+        r.drop_duplicates(subset ="lower_title", keep = 'first', inplace = True)
+
+        genre = r.iloc[0]['genre']
+
+        title = r.iloc[0]['lower_title']
         # Matching the genre with the dataset and reset the index
         data = new_df.loc[new_df['genre'] == genre]  
         data.drop_duplicates(inplace=True)
@@ -50,7 +53,8 @@ def searchbooks(request, new_df=new_df):
         
         # Get the index corresponding to original_title
         
-        idx = indices[title]# Get the pairwsie similarity scores 
+        idx = indices[title] # Get the pairwsie similarity scores
+
         sig = list(enumerate(sg[idx]))# Sort the books
         # print(sig) 
         sig = sorted(sig, key=lambda x: x[1], reverse=True)# Scores of the 5 most similar books 
@@ -59,7 +63,7 @@ def searchbooks(request, new_df=new_df):
     
         # Top 5 book recommendation
         rec = data.iloc[movie_indices]
-        cols = ["index", "author",	"bookformat",	"desc",	"genre", "img",	"isbn",	"isbn13",	"link",	"pages",	"rating",	"reviews",	"title",	"totalratings"]
+        cols = ["index", "author",  "bookformat", "desc", "genre", "img", "isbn", "isbn13", "link", "pages",  "rating", "reviews",  "title",  "totalratings"]
         return rec[cols]
 
     randomBooks = {}
@@ -70,9 +74,13 @@ def searchbooks(request, new_df=new_df):
             randomBooks = randomBooks.T.to_dict()
             error = ""
         except Exception as e:
-            error = "Please make sure you type the full book title."
+            error = "Sorry we couldn't find anything for you :("
+            # error = e
     else:
-        f = new_df.sample(8)
+        x = new_df[(new_df['genre'] == 'Finance') | (new_df['genre'] == 'Geography') | (new_df['genre'] == 'Self Help') | (new_df['genre'] == 'Mathematics') | (new_df['genre'] == 'Website Design') | (new_df['genre'] == 'Entrepreneurship')]
+
+        f = x.sample(8)
+        
         randomBooks = f.T.to_dict()
         error = ""
 
