@@ -35,10 +35,25 @@ Cosine similarity is particularly used in positive space, where the outcome is n
 
 ## Workflow of the system
 
-![Workflow]{workflow.jpg}
+![Workflow](Screenshots/workflow.jpg)
 
-## Recommendation System
+## Output
 
-![Recommendation]{rec-sys.jpg}
+### Home Page
+![Home Page](Screenshots/home page.png)
+
+### Login Page
+![Login Page](Screenshots/login.png)
+
+### Profile
+![Profile](Screenshots/profile.png)
+
+### Sign Up
+![Sign Up](Screenshots/signup.png)
+
+### Search Results
+![Search1](Screenshots/search1.png)
+![Search2](Screenshots/search2.png)
+![Search3](Screenshots/search3.png)
 
 Made by [@devanshiipatel](https://github.com/devanshiipatel) [@dishika1606](https://github.com/dishika1606) [@kumaripoonam9](https://github.com/kumaripoonam9) [@sreevidya-m](https://github.com/sreevidya-m)
