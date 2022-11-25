@@ -40,7 +40,7 @@ Cosine similarity is particularly used in positive space, where the outcome is n
 ## Output
 
 ### Home Page
-![Home Page](Screenshots/home page.png)
+![Home Page](Screenshots/homepage.png)
 
 ### Login Page
 ![Login Page](Screenshots/login.png)
